@@ -1,2 +1,2 @@
-# SPI-483-Driver
+# SPI 483 Driver
 SPI Driver for audio chip 483.
