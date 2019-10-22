@@ -1,2 +1,2 @@
-# SPI I/O Interface for AC483
-SPI I/O Interface for audio chip 483.
+# SPI I/O Interfaces for AC483
+SPI I/O Interfaces for audio chip 483.
