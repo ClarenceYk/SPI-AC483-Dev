@@ -11,7 +11,7 @@
  *
  * returns: 0 成功，（其他数字含义未定）
  */
-int spi_write_2bytes(const uint8_t *addr, const uint8_t *data);
+int spi_write_2bytes(const uint16_t *addr, const uint16_t *data);
 
 /**
  * Function: spi_read_2bytes
@@ -23,6 +23,6 @@ int spi_write_2bytes(const uint8_t *addr, const uint8_t *data);
  *
  * returns: 0 成功，（其他数字含义未定）
  */
-int spi_read_2bytes(const uint8_t *addr, const uint8_t *data);
+int spi_read_2bytes(const uint16_t *addr, const uint16_t *data);
 
 #endif
