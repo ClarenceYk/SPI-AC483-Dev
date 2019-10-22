@@ -1,4 +1,4 @@
-AC_INIT([libac483-dev], [0.0.1], [bug-report@address])
+AC_INIT([libspi-ac483-dev], [0.0.1], [bug-report@address])
 AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([foreign -Wall -Werror])
 # Checks for libraries.
