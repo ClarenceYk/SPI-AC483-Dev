@@ -11,7 +11,7 @@
  *
  * returns: 0 成功，（其他数字含义未定）
  */
-int spi_write_2bytes(const uint16_t *addr, const uint16_t *data);
+int spi_write_2bytes(const uint16_t addr, const uint16_t data);
 
 /**
  * Function: spi_read_2bytes
@@ -19,10 +19,10 @@ int spi_write_2bytes(const uint16_t *addr, const uint16_t *data);
  * 从指定的 AC483 内存地址读出2字节数据
  *
  * addr: 数据读取的地址
- * data: 读出的数据
+ * data: 读出的数据的存放地址
  *
  * returns: 0 成功，（其他数字含义未定）
  */
-int spi_read_2bytes(const uint16_t *addr, const uint16_t *data);
+int spi_read_2bytes(const uint16_t addr, const uint16_t *data);
 
 #endif
