@@ -12,6 +12,12 @@ START_TEST(test_io_rw)
 }
 END_TEST
 
+START_TEST(test_spi_init)
+{
+    ck_assert_int_eq(spi_ac483_init(), 0);
+}
+END_TEST
+
 Suite * io_suite(void)
 {
     Suite *s;
@@ -21,7 +27,9 @@ Suite * io_suite(void)
 
     tc_core = tcase_create("Core");
 
+    tcase_add_test(tc_core, test_spi_init);
     tcase_add_test(tc_core, test_io_rw);
+
     suite_add_tcase(s, tc_core);
 
     return s;
