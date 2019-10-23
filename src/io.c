@@ -3,7 +3,7 @@
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
 
-int     SPI_AC483_FD;
+int SPI_AC483_FD;
 
 int spi_write_2bytes(const uint16_t addr, const uint16_t data)
 {
