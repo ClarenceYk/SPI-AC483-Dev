@@ -14,6 +14,8 @@ END_TEST
 
 START_TEST(test_spi_init)
 {
+    ck_assert_int_eq(spi_ac483_init(""), -1);
+    ck_assert_int_eq(spi_ac483_init("jd7ergax6"), -1);
     ck_assert_int_eq(spi_ac483_init("/dev/spidev1.1"), -1);
     ck_assert_int_eq(spi_ac483_init("/dev/spidev4.0"), 0);
 }
