@@ -30,12 +30,14 @@ int spi_read_2bytes(const uint16_t addr, const uint16_t *data);
  * ------------------------
  * 初始化与 FPGA 通信的 SPI 接口
  *
+ * dev: SPI 设备文件路径
+ *
  * return:  0 成功
  *         -1 打开 SPI 设备文件出错
  *         -2 设置 SPI 模式出错
  *         -3 设置 SPI 单字位数出错
  *         -4 设置 SPI 时钟频率出错
  */
-int spi_ac483_init(void);
+int spi_ac483_init(const char *dev);
 
 #endif

@@ -3,7 +3,6 @@
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
 
-#define SPI_AC483_DEVICE "/dev/spidev4.0"
 int     SPI_AC483_FD;
 
 int spi_write_2bytes(const uint16_t addr, const uint16_t data)
@@ -16,7 +15,7 @@ int spi_read_2bytes(const uint16_t addr, const uint16_t *data)
     return 0;
 }
 
-int spi_init(uint8_t mode, uint8_t bits, uint32_t speed)
+int spi_init(const char *dev, uint8_t mode, uint8_t bits, uint32_t speed)
 {
     int retv;
     int fd;
@@ -24,7 +23,7 @@ int spi_init(uint8_t mode, uint8_t bits, uint32_t speed)
     uint8_t tmp_bits;
     uint32_t tmp_speed;
 
-    fd = open(SPI_AC483_DEVICE, O_RDWR);
+    fd = open(dev, O_RDWR);
     if (fd < 0)
         return fd;
     
@@ -67,7 +66,7 @@ int spi_init(uint8_t mode, uint8_t bits, uint32_t speed)
     return fd;
 }
 
-int spi_ac483_init(void)
+int spi_ac483_init(const char *dev)
 {
     int retv;
     uint8_t mode = 0
@@ -83,7 +82,7 @@ int spi_ac483_init(void)
     uint8_t bits = 8;
     uint32_t speed = 500000;
 
-    retv = spi_init(mode, bits, speed);
+    retv = spi_init(dev, mode, bits, speed);
     if (retv < 0)
         return retv;
 
