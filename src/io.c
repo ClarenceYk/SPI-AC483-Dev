@@ -1,15 +1,57 @@
+#include <stdio.h>
 #include <unistd.h>
 #include <stdint.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
+#include "private_io.h"
 
 #define ARRAY_SIZE(a) (sizeof((a)) / sizeof((a)[0]))
+#define LOOPTEST 0
 
 int SPI_AC483_FD = -1;
 
 int spi_write_2bytes(const uint16_t addr, const uint16_t data)
 {
+    int retv;
+
+    if (SPI_AC483_FD < 0)
+        return -1;
+
+    if (addr < 0x1000 || addr > 0x17FF)
+        return -2;
+
+    // 先传地址
+    ac483_ctrl_msg_t msg = {
+        .ctrl_h = 0x00,
+        .ctrl_l = 0x02, // 0010: write HPIA
+        .msg_h = (uint8_t)(addr >> 8),
+        .msg_l = (uint8_t)(addr & 0x00FF),
+    };
+
+    size_t size = sizeof(ac483_ctrl_msg_t);
+    uint8_t *tx_buff = (uint8_t *)&msg;
+
+    struct spi_ioc_transfer tr = {
+        .tx_buf = (uint32_t)tx_buff,
+        .rx_buf = (uint32_t)NULL,
+        .len = size,
+    };
+
+    retv = ioctl(SPI_AC483_FD, SPI_IOC_MESSAGE(1), &tr);
+    if (retv < size)
+        return -3;
+    
+    // 再传数据
+    msg.ctrl_h = 0x00;
+    msg.ctrl_l = 0x01; // 0001: write HPID
+    msg.msg_h = (uint8_t)(data >> 8);
+    msg.msg_l = (uint8_t)(data & 0x00FF);
+
+    retv = ioctl(SPI_AC483_FD, SPI_IOC_MESSAGE(1), &tr);
+    if (retv < size)
+        return -4;
+
     return 0;
 }
 
@@ -73,7 +115,9 @@ int spi_ac483_init(const char *dev)
 {
     int retv;
     uint8_t mode = 0
-        //| SPI_LOOP
+#if LOOPTEST
+        | SPI_LOOP
+#endif
         | SPI_CPHA
         | SPI_CPOL
         //| SPI_LSB_FIRST
@@ -120,8 +164,8 @@ int spi_loop_test(void)
 
     struct spi_ioc_transfer trs[] = {
         {
-            .tx_buf = (uint64_t)tx,
-            .rx_buf = (uint64_t)rx,
+            .tx_buf = (uint32_t)tx,
+            .rx_buf = (uint32_t)rx,
             .len = ARRAY_SIZE(tx),
         },
     };

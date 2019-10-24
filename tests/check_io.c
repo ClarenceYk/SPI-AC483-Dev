@@ -3,15 +3,6 @@
 #include <stdlib.h>
 #include "check_io.h"
 
-START_TEST(test_io_rw)
-{
-    uint16_t addr = 233;
-    uint16_t data = 666;
-    ck_assert_int_eq(spi_write_2bytes(addr, data), 0);
-    ck_assert_int_eq(spi_read_2bytes(addr, &data), 0);
-}
-END_TEST
-
 START_TEST(test_spi_init)
 {
     ck_assert_int_eq(spi_ac483_init(""), -1);
@@ -26,6 +17,17 @@ START_TEST(test_spi_loop)
 {
     ck_assert_int_eq(spi_ac483_init("/dev/spidev4.0"), 0);
     ck_assert_int_eq(spi_loop_test(), 0);
+    ck_assert_int_eq(spi_ac483_deinit(), 0);
+}
+END_TEST
+
+START_TEST(test_io_rw)
+{
+    ck_assert_int_eq(spi_ac483_init("/dev/spidev4.0"), 0);
+    uint16_t addr = 0x1000;
+    uint16_t data = 666;
+    ck_assert_int_eq(spi_write_2bytes(addr, data), 0);
+    ck_assert_int_eq(spi_read_2bytes(addr, &data), 0);
     ck_assert_int_eq(spi_ac483_deinit(), 0);
 }
 END_TEST

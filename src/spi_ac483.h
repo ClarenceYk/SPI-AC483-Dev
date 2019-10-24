@@ -9,7 +9,11 @@
  * addr: 数据写入的地址
  * data: 写入的数据
  *
- * returns: 0 成功，（其他数字含义未定）
+ * returns:  0 成功
+ *          -1 SPI 设备文件未打开
+ *          -2 地址超出范围
+ *          -3 传输地址出错
+ *          -4 传输数据出错
  */
 int spi_write_2bytes(const uint16_t addr, const uint16_t data);
 
