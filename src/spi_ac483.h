@@ -32,12 +32,22 @@ int spi_read_2bytes(const uint16_t addr, const uint16_t *data);
  *
  * dev: SPI 设备文件路径
  *
- * return:  0 成功
- *         -1 打开 SPI 设备文件出错
- *         -2 设置 SPI 模式出错
- *         -3 设置 SPI 单字位数出错
- *         -4 设置 SPI 时钟频率出错
+ * returns:  0 成功
+ *          -1 打开 SPI 设备文件出错
+ *          -2 设置 SPI 模式出错
+ *          -3 设置 SPI 单字位数出错
+ *          -4 设置 SPI 时钟频率出错
  */
 int spi_ac483_init(const char *dev);
+
+/**
+ * Function: spi_ac483_deinit
+ * ------------------------
+ * SPI 接口取消初始化
+ *
+ * returns:  0 成功
+ *          -1 失败
+ */
+int spi_ac483_deinit(void);
 
 #endif

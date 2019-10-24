@@ -3,7 +3,7 @@
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
 
-int SPI_AC483_FD;
+int SPI_AC483_FD = -1;
 
 int spi_write_2bytes(const uint16_t addr, const uint16_t data)
 {
@@ -89,4 +89,12 @@ int spi_ac483_init(const char *dev)
     SPI_AC483_FD = retv;
 
     return 0;
+}
+
+int spi_ac483_deinit(void)
+{
+    if (SPI_AC483_FD < 0)
+        return 0;
+    
+    return close(SPI_AC483_FD);
 }
