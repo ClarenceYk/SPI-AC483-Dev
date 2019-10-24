@@ -32,8 +32,8 @@ int spi_write_2bytes(const uint16_t addr, const uint16_t data)
     uint8_t *tx_buff = (uint8_t *)&msg;
 
     struct spi_ioc_transfer tr = {
-        .tx_buf = (uint32_t)tx_buff,
-        .rx_buf = (uint32_t)NULL,
+        .tx_buf = (unsigned long)tx_buff,
+        .rx_buf = (unsigned long)NULL,
         .len = size,
     };
 
@@ -163,8 +163,8 @@ int spi_loop_test(void)
 
     struct spi_ioc_transfer trs[] = {
         {
-            .tx_buf = (uint32_t)tx,
-            .rx_buf = (uint32_t)rx,
+            .tx_buf = (unsigned long)tx,
+            .rx_buf = (unsigned long)rx,
             .len = ARRAY_SIZE(tx),
         },
     };
