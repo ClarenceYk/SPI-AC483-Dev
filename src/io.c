@@ -1,7 +1,10 @@
+#include <unistd.h>
 #include <stdint.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
+
+#define ARRAY_SIZE(a) (sizeof((a)) / sizeof((a)[0]))
 
 int SPI_AC483_FD = -1;
 
@@ -97,4 +100,42 @@ int spi_ac483_deinit(void)
         return 0;
     
     return close(SPI_AC483_FD);
+}
+
+// Only for testing
+int spi_loop_test(void)
+{
+    int retv;
+    uint8_t tx[] = {
+        0x53, 0x69, 0x78, 0x20, 0x6a, 0x61, 0x76, 0x65,
+        0x6c, 0x69, 0x6e, 0x73, 0x20, 0x74, 0x68, 0x72,
+        0x6f, 0x77, 0x6e, 0x20, 0x62, 0x79, 0x20, 0x74,
+        0x68, 0x65, 0x20, 0x71, 0x75, 0x69, 0x63, 0x6b,
+        0x20, 0x73, 0x61, 0x76, 0x61, 0x67, 0x65, 0x73,
+        0x20, 0x77, 0x68, 0x69, 0x7a, 0x7a, 0x65, 0x64,
+        0x20, 0x66, 0x6f, 0x72, 0x74, 0x79, 0x20, 0x70,
+        0x61, 0x63, 0x65, 0x73, 0x20, 0x62, 0x65, 0x79,
+    };
+    uint8_t rx[ARRAY_SIZE(tx)] = {0, };
+
+    struct spi_ioc_transfer trs[] = {
+        {
+            .tx_buf = (uint64_t)tx,
+            .rx_buf = (uint64_t)rx,
+            .len = ARRAY_SIZE(tx),
+        },
+    };
+
+    retv = ioctl(SPI_AC483_FD, SPI_IOC_MESSAGE(1), trs);
+    if (retv < ARRAY_SIZE(tx))
+        goto END;
+
+    int idx;
+    for (idx = 0; idx < ARRAY_SIZE(tx); idx ++) {
+        if (tx[idx] == rx[idx])
+            retv --;
+    }
+
+END:
+    return retv;
 }

@@ -1,7 +1,7 @@
 #include <check.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "../src/spi_ac483.h"
+#include "check_io.h"
 
 START_TEST(test_io_rw)
 {
@@ -18,6 +18,15 @@ START_TEST(test_spi_init)
     ck_assert_int_eq(spi_ac483_init("jd7ergax6"), -1);
     ck_assert_int_eq(spi_ac483_init("/dev/spidev1.1"), -1);
     ck_assert_int_eq(spi_ac483_init("/dev/spidev4.0"), 0);
+    ck_assert_int_eq(spi_ac483_deinit(), 0);
+}
+END_TEST
+
+START_TEST(test_spi_loop)
+{
+    ck_assert_int_eq(spi_ac483_init("/dev/spidev4.0"), 0);
+    ck_assert_int_eq(spi_loop_test(), 0);
+    ck_assert_int_eq(spi_ac483_deinit(), 0);
 }
 END_TEST
 
@@ -31,6 +40,7 @@ Suite * io_suite(void)
     tc_core = tcase_create("Core");
 
     tcase_add_test(tc_core, test_spi_init);
+    tcase_add_test(tc_core, test_spi_loop);
     tcase_add_test(tc_core, test_io_rw);
 
     suite_add_tcase(s, tc_core);
