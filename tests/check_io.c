@@ -15,9 +15,9 @@ END_TEST
 
 START_TEST(test_spi_loop)
 {
-    ck_assert_int_eq(spi_ac483_init("/dev/spidev4.0"), 0);
+    spi_ac483_init("/dev/spidev4.0");
     ck_assert_int_eq(spi_loop_test(), 0);
-    ck_assert_int_eq(spi_ac483_deinit(), 0);
+    spi_ac483_deinit();
 }
 END_TEST
 
@@ -26,14 +26,14 @@ START_TEST(test_io_write)
     uint16_t addr;
     uint16_t data = 666;
     ck_assert_int_eq(spi_write_2bytes(addr, data), -1);
-    ck_assert_int_eq(spi_ac483_init("/dev/spidev4.0"), 0);
+    spi_ac483_init("/dev/spidev4.0");
     addr = 0x1ff;
     ck_assert_int_eq(spi_write_2bytes(addr, data), -2);
     addr = 0x2000;
     ck_assert_int_eq(spi_write_2bytes(addr, data), -2);
     addr = 0x1234;
     ck_assert_int_eq(spi_write_2bytes(addr, data), 0);
-    ck_assert_int_eq(spi_ac483_deinit(), 0);
+    spi_ac483_deinit();
 }
 END_TEST
 
@@ -42,7 +42,7 @@ START_TEST(test_io_read)
     uint16_t addr;
     uint16_t data;
     ck_assert_int_eq(spi_read_2bytes(addr, &data), -1);
-    ck_assert_int_eq(spi_ac483_init("/dev/spidev4.0"), 0);
+    spi_ac483_init("/dev/spidev4.0");
     addr = 0x1ff;
     ck_assert_int_eq(spi_read_2bytes(addr, &data), -3);
     addr = 0x2000;
@@ -51,7 +51,7 @@ START_TEST(test_io_read)
     ck_assert_int_eq(spi_read_2bytes(addr, (void *)0), -2);
     ck_assert_int_eq(spi_read_2bytes(addr, &data), 0);
     ck_assert_int_eq(data, addr);
-    ck_assert_int_eq(spi_ac483_deinit(), 0);
+    spi_ac483_deinit();
 }
 END_TEST
 
