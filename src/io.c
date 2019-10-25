@@ -123,8 +123,11 @@ int spi_read_2bytes(const uint16_t addr, uint16_t *data)
     if (SPI_AC483_FD < 0)
         return -1;
 
-    if (addr < 0x1000 || addr > 0x17FF)
+    if (NULL == data)
         return -2;
+
+    if (addr < 0x1000 || addr > 0x17FF)
+        return -3;
 
     // 先传地址
     ac483_ctrl_msg_t msg = {
@@ -145,7 +148,7 @@ int spi_read_2bytes(const uint16_t addr, uint16_t *data)
 
     retv = ioctl(SPI_AC483_FD, SPI_IOC_MESSAGE(1), &tr);
     if (retv < size)
-        return -3;
+        return -4;
     
     // 再读数据
     msg.ctrl_h = 0x00;
@@ -155,9 +158,6 @@ int spi_read_2bytes(const uint16_t addr, uint16_t *data)
 
     retv = ioctl(SPI_AC483_FD, SPI_IOC_MESSAGE(1), &tr);
     if (retv < size)
-        return -4;
-
-    if (NULL == data)
         return -5;
     
     *data = 0;
