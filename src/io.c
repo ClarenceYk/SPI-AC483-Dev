@@ -91,10 +91,9 @@ int spi_write_2bytes(const uint16_t addr, const uint16_t data)
     };
 
     size_t size = sizeof(ac483_ctrl_msg_t);
-    uint8_t *tx_buff = (uint8_t *)&msg;
 
     struct spi_ioc_transfer tr = {
-        .tx_buf = (unsigned long)tx_buff,
+        .tx_buf = (unsigned long)(uint8_t *)&msg,
         .rx_buf = (unsigned long)NULL,
         .len = size,
     };
@@ -130,7 +129,7 @@ int spi_read_2bytes(const uint16_t addr, uint16_t *data)
         return -3;
 
     // 先传地址
-    ac483_ctrl_msg_t msg = {
+    ac483_ctrl_msg_t msg_tx = {
         .ctrl_h = 0x00,
         .ctrl_l = 0x02, // 0010: write HPIA
         .msg_h = (uint8_t)(addr >> 8),
@@ -138,10 +137,9 @@ int spi_read_2bytes(const uint16_t addr, uint16_t *data)
     };
 
     size_t size = sizeof(ac483_ctrl_msg_t);
-    uint8_t *tx_buff = (uint8_t *)&msg;
 
     struct spi_ioc_transfer tr = {
-        .tx_buf = (unsigned long)tx_buff,
+        .tx_buf = (unsigned long)(uint8_t *)&msg_tx,
         .rx_buf = (unsigned long)NULL,
         .len = size,
     };
@@ -151,8 +149,8 @@ int spi_read_2bytes(const uint16_t addr, uint16_t *data)
         return -4;
     
     // 再读数据
-    msg.ctrl_h = 0x00;
-    msg.ctrl_l = 0x05; // 0101: read HPID
+    msg_tx.ctrl_h = 0x00;
+    msg_tx.ctrl_l = 0x05; // 0101: read HPID
     ac483_ctrl_msg_t msg_rx = {0,0,0,0};
     tr.rx_buf = (unsigned long)(uint8_t *)&msg_rx;
 
