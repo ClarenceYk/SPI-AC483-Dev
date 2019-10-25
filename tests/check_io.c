@@ -50,6 +50,7 @@ START_TEST(test_io_read)
     addr = 0x1234;
     ck_assert_int_eq(spi_read_2bytes(addr, (void *)0), -5);
     ck_assert_int_eq(spi_read_2bytes(addr, &data), 0);
+    ck_assert_int_eq(data, addr);
     ck_assert_int_eq(spi_ac483_deinit(), 0);
 }
 END_TEST

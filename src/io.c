@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <unistd.h>
 #include <stdint.h>
 #include <fcntl.h>
@@ -88,7 +89,7 @@ int spi_read_2bytes(const uint16_t addr, uint16_t *data)
     msg.ctrl_h = 0x00;
     msg.ctrl_l = 0x05; // 0101: read HPID
     ac483_ctrl_msg_t msg_rx = {0,0,0,0};
-    tr.rx_buf = (unsigned long)&msg_rx;
+    tr.rx_buf = (unsigned long)(uint8_t *)&msg_rx;
 
     retv = ioctl(SPI_AC483_FD, SPI_IOC_MESSAGE(1), &tr);
     if (retv < size)
@@ -96,7 +97,8 @@ int spi_read_2bytes(const uint16_t addr, uint16_t *data)
 
     if (NULL == data)
         return -5;
-
+    
+    *data = 0;
     *data = ((*data | msg_rx.msg_h) << 8) | msg_rx.msg_l;
 
     return 0;
