@@ -1,15 +1,12 @@
 #ifndef PRIVATE_IO_H
 #define PRIVATE_IO_H
+#define ARRAY_SIZE(a) (sizeof((a)) / sizeof((a)[0]))
 
-#include <stdint.h>
-
-struct AC483_Ctrl_Msg
-{
+typedef struct AC483_Ctrl_Msg {
     uint8_t ctrl_h;
     uint8_t ctrl_l;
     uint8_t msg_h;
     uint8_t msg_l;
-};
-typedef struct AC483_Ctrl_Msg ac483_ctrl_msg_t;
+} ac483_ctrl_msg_t;
 
 #endif
