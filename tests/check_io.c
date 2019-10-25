@@ -44,11 +44,11 @@ START_TEST(test_io_read)
     ck_assert_int_eq(spi_read_2bytes(addr, &data), -1);
     ck_assert_int_eq(spi_ac483_init("/dev/spidev4.0"), 0);
     addr = 0x1ff;
-    ck_assert_int_eq(spi_read_2bytes(addr, &data), -2);
+    ck_assert_int_eq(spi_read_2bytes(addr, &data), -3);
     addr = 0x2000;
-    ck_assert_int_eq(spi_read_2bytes(addr, &data), -2);
+    ck_assert_int_eq(spi_read_2bytes(addr, &data), -3);
     addr = 0x1234;
-    ck_assert_int_eq(spi_read_2bytes(addr, (void *)0), -5);
+    ck_assert_int_eq(spi_read_2bytes(addr, (void *)0), -2);
     ck_assert_int_eq(spi_read_2bytes(addr, &data), 0);
     ck_assert_int_eq(data, addr);
     ck_assert_int_eq(spi_ac483_deinit(), 0);
