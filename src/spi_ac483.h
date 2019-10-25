@@ -2,6 +2,32 @@
 #define SIP_AC483_H
 
 /**
+ * Function: spi_write_control_byte
+ * --------------------------------
+ * 向 AC483 控制寄存器写值
+ *
+ * val: 写入的值
+ *
+ * returns:  0 成功
+ *          -1 SPI 设备文件未打开
+ *          -2 写入值出错
+ */
+int spi_write_control_byte(const uint8_t val);
+
+/**
+ * Function: spi_read_control_byte
+ * -------------------------------
+ * 从 AC483 控制寄存器读值
+ *
+ * val: 读出值的存放地址
+ *
+ * returns:  0 成功
+ *          -1 SPI 设备文件未打开
+ *          -2 读取值出错
+ */
+int spi_read_control_byte(uint8_t *val);
+
+/**
  * Function: spi_write_2bytes
  * --------------------------
  * 向指定的 AC483 内存地址写入2字节数据

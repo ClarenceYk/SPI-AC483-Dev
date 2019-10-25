@@ -10,6 +10,63 @@
 
 int SPI_AC483_FD = -1;
 
+int spi_write_control_byte(const uint8_t val) {
+    int retv;
+
+    if (SPI_AC483_FD < 0)
+        return -1;
+    
+    ac483_ctrl_msg_t msg = {
+        .ctrl_h = 0x00,
+        .ctrl_l = 0x00, // 0000: write HPIC
+        .msg_h = val,
+        .msg_l = val,
+    };
+
+    size_t size = sizeof(ac483_ctrl_msg_t);
+
+    struct spi_ioc_transfer tr = {
+        .tx_buf = (unsigned long)(uint8_t *)&msg,
+        .rx_buf = (unsigned long)NULL,
+        .len = size,
+    };
+
+    retv = ioctl(SPI_AC483_FD, SPI_IOC_MESSAGE(1), &tr);
+    if (retv < size)
+        return -2;
+
+    return 0;
+}
+
+int spi_read_control_byte(uint8_t *val) {
+    int retv;
+
+    if (SPI_AC483_FD < 0)
+        return -1;
+    
+    ac483_ctrl_msg_t msg_tx = {
+        .ctrl_h = 0x00,
+        .ctrl_l = 0x04, // 0100: read HPIC
+    };
+    ac483_ctrl_msg_t msg_rx = {0,0,0,0};
+
+    size_t size = sizeof(ac483_ctrl_msg_t);
+
+    struct spi_ioc_transfer tr = {
+        .tx_buf = (unsigned long)(uint8_t *)&msg_tx,
+        .rx_buf = (unsigned long)(uint8_t *)&msg_rx,
+        .len = size,
+    };
+
+    retv = ioctl(SPI_AC483_FD, SPI_IOC_MESSAGE(1), &tr);
+    if (retv < size)
+        return -2;
+
+    *val = msg_rx.msg_h;
+
+    return 0;
+}
+
 int spi_write_2bytes(const uint16_t addr, const uint16_t data)
 {
     int retv;
