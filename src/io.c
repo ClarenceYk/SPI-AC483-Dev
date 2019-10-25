@@ -6,7 +6,6 @@
 #include "private_io.h"
 
 #define ARRAY_SIZE(a) (sizeof((a)) / sizeof((a)[0]))
-#define LOOPTEST 0
 
 int SPI_AC483_FD = -1;
 
@@ -114,7 +113,7 @@ int spi_ac483_init(const char *dev)
 {
     int retv;
     uint8_t mode = 0
-#if LOOPTEST
+#ifdef ENABLEGCOV
         | SPI_LOOP
 #endif
         | SPI_CPHA
