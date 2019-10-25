@@ -23,8 +23,8 @@ int spi_write_control_byte(const uint8_t val);
  *
  * returns:  0 成功
  *          -1 SPI 设备文件未打开
- *          -2 读取值出错
- *          -3 val 为空指针
+ *          -2 val 为空指针
+ *          -3 读取值出错
  */
 int spi_read_control_byte(uint8_t *val);
 

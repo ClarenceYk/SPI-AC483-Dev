@@ -43,10 +43,15 @@ int spi_read_control_byte(uint8_t *val) {
 
     if (SPI_AC483_FD < 0)
         return -1;
+
+    if (NULL == val)
+        return -2;
     
     ac483_ctrl_msg_t msg_tx = {
         .ctrl_h = 0x00,
         .ctrl_l = 0x04, // 0100: read HPIC
+        .msg_h = *val,
+        .msg_l = *val,
     };
     ac483_ctrl_msg_t msg_rx = {0,0,0,0};
 
@@ -60,9 +65,6 @@ int spi_read_control_byte(uint8_t *val) {
 
     retv = ioctl(SPI_AC483_FD, SPI_IOC_MESSAGE(1), &tr);
     if (retv < size)
-        return -2;
-
-    if (NULL == val)
         return -3;
 
     *val = msg_rx.msg_h;
