@@ -62,6 +62,9 @@ int spi_read_control_byte(uint8_t *val) {
     if (retv < size)
         return -2;
 
+    if (NULL == val)
+        return -3;
+
     *val = msg_rx.msg_h;
 
     return 0;
