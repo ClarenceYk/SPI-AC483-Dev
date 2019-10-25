@@ -55,6 +55,28 @@ START_TEST(test_io_read)
 }
 END_TEST
 
+START_TEST(test_ctrl_reg_write)
+{
+    uint8_t data = 0xab;
+    ck_assert_int_eq(spi_write_control_byte(data), -1);
+    spi_ac483_init("/dev/spidev4.0");
+    ck_assert_int_eq(spi_write_control_byte(data), 0);
+    spi_ac483_deinit();
+}
+END_TEST
+
+START_TEST(test_ctrl_reg_read)
+{
+    uint8_t data = 0xab;
+    ck_assert_int_eq(spi_read_control_byte(&data), -1);
+    spi_ac483_init("/dev/spidev4.0");
+    ck_assert_int_eq(spi_read_control_byte((void *)0), -2);
+    ck_assert_int_eq(spi_read_control_byte(&data), 0);
+    ck_assert_int_eq(data, 0xab);
+    spi_ac483_deinit();
+}
+END_TEST
+
 Suite * io_suite(void)
 {
     Suite *s;
@@ -68,6 +90,8 @@ Suite * io_suite(void)
     tcase_add_test(tc_core, test_spi_loop);
     tcase_add_test(tc_core, test_io_write);
     tcase_add_test(tc_core, test_io_read);
+    tcase_add_test(tc_core, test_ctrl_reg_write);
+    tcase_add_test(tc_core, test_ctrl_reg_read);
 
     suite_add_tcase(s, tc_core);
 
