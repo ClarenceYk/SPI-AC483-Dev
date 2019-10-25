@@ -25,9 +25,14 @@ int spi_write_2bytes(const uint16_t addr, const uint16_t data);
  * addr: 数据读取的地址
  * data: 读出的数据的存放地址
  *
- * returns: 0 成功，（其他数字含义未定）
+ * returns:  0 成功
+ *          -1 SPI 设备文件未打开
+ *          -2 地址超出范围
+ *          -3 传输地址出错
+ *          -4 读取数据出错
+ *          -5 data 为空指针
  */
-int spi_read_2bytes(const uint16_t addr, const uint16_t *data);
+int spi_read_2bytes(const uint16_t addr, uint16_t *data);
 
 /**
  * Function: spi_ac483_init

@@ -53,8 +53,52 @@ int spi_write_2bytes(const uint16_t addr, const uint16_t data)
     return 0;
 }
 
-int spi_read_2bytes(const uint16_t addr, const uint16_t *data)
+int spi_read_2bytes(const uint16_t addr, uint16_t *data)
 {
+    int retv;
+
+    if (SPI_AC483_FD < 0)
+        return -1;
+
+    if (addr < 0x1000 || addr > 0x17FF)
+        return -2;
+
+    // 先传地址
+    ac483_ctrl_msg_t msg = {
+        .ctrl_h = 0x00,
+        .ctrl_l = 0x02, // 0010: write HPIA
+        .msg_h = (uint8_t)(addr >> 8),
+        .msg_l = (uint8_t)(addr & 0x00FF),
+    };
+
+    size_t size = sizeof(ac483_ctrl_msg_t);
+    uint8_t *tx_buff = (uint8_t *)&msg;
+
+    struct spi_ioc_transfer tr = {
+        .tx_buf = (unsigned long)tx_buff,
+        .rx_buf = (unsigned long)NULL,
+        .len = size,
+    };
+
+    retv = ioctl(SPI_AC483_FD, SPI_IOC_MESSAGE(1), &tr);
+    if (retv < size)
+        return -3;
+    
+    // 再读数据
+    msg.ctrl_h = 0x00;
+    msg.ctrl_l = 0x05; // 0101: read HPID
+    ac483_ctrl_msg_t msg_rx = {0,0,0,0};
+    tr.rx_buf = (unsigned long)&msg_rx;
+
+    retv = ioctl(SPI_AC483_FD, SPI_IOC_MESSAGE(1), &tr);
+    if (retv < size)
+        return -4;
+
+    if (NULL == data)
+        return -5;
+
+    *data = ((*data | msg_rx.msg_h) << 8) | msg_rx.msg_l;
+
     return 0;
 }
 

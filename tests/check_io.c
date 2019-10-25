@@ -39,9 +39,18 @@ END_TEST
 
 START_TEST(test_io_read)
 {
-    uint16_t addr = 0x1000;
-    uint16_t data = 666;
+    uint16_t addr;
+    uint16_t data;
+    ck_assert_int_eq(spi_read_2bytes(addr, &data), -1);
+    ck_assert_int_eq(spi_ac483_init("/dev/spidev4.0"), 0);
+    addr = 0x1ff;
+    ck_assert_int_eq(spi_read_2bytes(addr, &data), -2);
+    addr = 0x2000;
+    ck_assert_int_eq(spi_read_2bytes(addr, &data), -2);
+    addr = 0x1234;
+    ck_assert_int_eq(spi_read_2bytes(addr, (void *)0), -5);
     ck_assert_int_eq(spi_read_2bytes(addr, &data), 0);
+    ck_assert_int_eq(spi_ac483_deinit(), 0);
 }
 END_TEST
 
