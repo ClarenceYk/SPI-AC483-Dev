@@ -62,6 +62,41 @@ int spi_write_2bytes(const uint16_t addr, const uint16_t data);
 int spi_read_2bytes(const uint16_t addr, uint16_t *data);
 
 /**
+ * Function: spi_write_block
+ * --------------------------
+ * 向指定的 AC483 内存地址写入整块数据
+ *
+ * addr: 数据写入的起始地址
+ * buff: 数据缓存起始地址
+ * size: 数据缓存大小
+ *
+ * returns:  0 成功
+ *          -1 SPI 设备文件未打开
+ *          -2 地址超出范围
+ *          -3 传输地址出错
+ *          -4 传输数据出错
+ */
+int spi_write_block(const uint16_t addr, const uint8_t *buff, size_t size);
+
+/**
+ * Function: spi_read_block
+ * -------------------------
+ * 从指定的 AC483 内存地址读出整块数据
+ *
+ * addr: 数据读取的起始地址
+ * buff: 数据缓存起始地址
+ * size: 数据缓存大小
+ *
+ * returns:  0 成功
+ *          -1 SPI 设备文件未打开
+ *          -2 data 为空指针
+ *          -3 地址超出范围
+ *          -4 传输地址出错
+ *          -5 读取数据出错
+ */
+int spi_read_block(const uint16_t addr, uint8_t *buff, size_t size);
+
+/**
  * Function: spi_ac483_init
  * ------------------------
  * 初始化与 FPGA 通信的 SPI 接口
