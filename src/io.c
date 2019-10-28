@@ -7,7 +7,7 @@
 
 int SPI_AC483_FD = -1;
 
-int spi_write_control_byte(const uint8_t val)
+int spi_write_control_byte(uint8_t val)
 {
     int retv;
 
@@ -78,7 +78,7 @@ int spi_read_control_byte(uint8_t *val)
     return 0;
 }
 
-int spi_write_2bytes(const uint16_t addr, const uint16_t data)
+int spi_write_2bytes(uint16_t addr, uint16_t data)
 {
     int retv;
 
@@ -128,7 +128,7 @@ int spi_write_2bytes(const uint16_t addr, const uint16_t data)
     return 0;
 }
 
-int spi_read_2bytes(const uint16_t addr, uint16_t *data)
+int spi_read_2bytes(uint16_t addr, uint16_t *data)
 {
     int retv;
 
@@ -186,7 +186,7 @@ int spi_read_2bytes(const uint16_t addr, uint16_t *data)
     return 0;
 }
 
-int spi_write_block(const uint16_t addr, const uint8_t *blck, size_t size)
+int spi_write_block(uint16_t addr, const uint8_t *blck, size_t size)
 {
     int retv;
 
@@ -243,7 +243,7 @@ int spi_write_block(const uint16_t addr, const uint8_t *blck, size_t size)
     return size;
 }
 
-int spi_read_block(const uint16_t addr, uint8_t *blck, size_t size)
+int spi_read_block(uint16_t addr, uint8_t *blck, size_t size)
 {
     int retv;
 

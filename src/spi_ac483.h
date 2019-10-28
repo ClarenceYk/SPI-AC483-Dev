@@ -12,7 +12,7 @@
  *          -1 SPI 设备文件未打开
  *          -2 写入值出错
  */
-int spi_write_control_byte(const uint8_t val);
+int spi_write_control_byte(uint8_t val);
 
 /**
  * Function: spi_read_control_byte
@@ -42,7 +42,7 @@ int spi_read_control_byte(uint8_t *val);
  *          -3 传输地址出错
  *          -4 传输数据出错
  */
-int spi_write_2bytes(const uint16_t addr, const uint16_t data);
+int spi_write_2bytes(uint16_t addr, uint16_t data);
 
 /**
  * Function: spi_read_2bytes
@@ -59,7 +59,7 @@ int spi_write_2bytes(const uint16_t addr, const uint16_t data);
  *          -4 传输地址出错
  *          -5 读取数据出错
  */
-int spi_read_2bytes(const uint16_t addr, uint16_t *data);
+int spi_read_2bytes(uint16_t addr, uint16_t *data);
 
 /**
  * Function: spi_write_block
@@ -77,7 +77,7 @@ int spi_read_2bytes(const uint16_t addr, uint16_t *data);
  *          -4 传输地址出错
  *          -5 传输数据出错
  */
-int spi_write_block(const uint16_t addr, const uint8_t *blck, size_t size);
+int spi_write_block(uint16_t addr, const uint8_t *blck, size_t size);
 
 /**
  * Function: spi_read_block
@@ -95,7 +95,7 @@ int spi_write_block(const uint16_t addr, const uint8_t *blck, size_t size);
  *          -4 传输地址出错
  *          -5 读取数据出错
  */
-int spi_read_block(const uint16_t addr, uint8_t *blck, size_t size);
+int spi_read_block(uint16_t addr, uint8_t *blck, size_t size);
 
 /**
  * Function: spi_ac483_init
