@@ -85,7 +85,7 @@ int spi_write_2bytes(const uint16_t addr, const uint16_t data)
     if (SPI_AC483_FD < 0)
         return -1;
 
-    if (addr < 0x1000 || addr > 0x17FF)
+    if (addr < AC483_AVAIL_MEM_STA || addr > AC483_AVAIL_MEM_END)
         return -2;
 
     // 先传地址
@@ -138,7 +138,7 @@ int spi_read_2bytes(const uint16_t addr, uint16_t *data)
     if (NULL == data)
         return -2;
 
-    if (addr < 0x1000 || addr > 0x17FF)
+    if (addr < AC483_AVAIL_MEM_STA || addr > AC483_AVAIL_MEM_END)
         return -3;
 
     // 先传地址
@@ -196,7 +196,7 @@ int spi_write_block(const uint16_t addr, const uint8_t *blck, size_t size)
     if (NULL == blck)
         return -2;
 
-    if (addr < 0x1000 || addr > 0x17FF)
+    if (addr < AC483_AVAIL_MEM_STA || addr > AC483_AVAIL_MEM_END)
         return -3;
 
     // 先传地址
@@ -230,8 +230,8 @@ int spi_write_block(const uint16_t addr, const uint8_t *blck, size_t size)
     ctrl_msg.ctrl_h = 0x00;
     ctrl_msg.ctrl_l = 0x01; // 0001: write HPID
     tr[1].tx_buf = (unsigned long)blck;
-    if (size/2-1 + addr > 0x17FF)
-        size = 2 * (0x17FF - addr + 1);
+    if (size/2-1 + addr > AC483_AVAIL_MEM_END)
+        size = 2 * (AC483_AVAIL_MEM_END - addr + 1);
     else
         size = 2 * (size / 2);
     tr[1].len = size;
