@@ -80,225 +80,44 @@ int spi_read_control_byte(uint8_t *val)
 
 int spi_write_2bytes(uint16_t addr, uint16_t data)
 {
-    int retv;
-
-    if (SPI_AC483_FD < 0)
-        return -1;
-
-    if (addr < AC483_AVAIL_MEM_STA || addr > AC483_AVAIL_MEM_END)
-        return -2;
-
-    // 先传地址
-    ac483_ctrl_msg_t ctrl_msg = {
-        .ctrl_h = 0x00,
-        .ctrl_l = 0x02, // 0010: write HPIA
-    };
-    uint8_t buff[2] = {
-        (uint8_t)(addr >> 8),
-        (uint8_t)(addr & 0x00FF)
+    uint8_t buf[2] = {
+        (uint8_t)(data >> 8),
+        (uint8_t)(data & 0x00FF)
     };
 
-    struct spi_ioc_transfer tr[2] = {
-        {
-            .tx_buf = (unsigned long)(uint8_t *)&ctrl_msg,
-            .rx_buf = (unsigned long)NULL,
-            .len = AC483_CTRL_MSG_LEN(),
-        },
-        {
-            .tx_buf = (unsigned long)buff,
-            .rx_buf = (unsigned long)NULL,
-            .len = ARRAY_SIZE(buff),
-        }
-    };
-
-    retv = ioctl(SPI_AC483_FD, SPI_IOC_MESSAGE(2), tr);
-    if (retv < AC483_CTRL_MSG_LEN() + ARRAY_SIZE(buff))
-        return -3;
-    
-    // 再传数据
-    ctrl_msg.ctrl_h = 0x00;
-    ctrl_msg.ctrl_l = 0x01; // 0001: write HPID
-    buff[0] = (uint8_t)(data >> 8);
-    buff[1] = (uint8_t)(data & 0x00FF);
-
-    retv = ioctl(SPI_AC483_FD, SPI_IOC_MESSAGE(2), tr);
-    if (retv < AC483_CTRL_MSG_LEN() + ARRAY_SIZE(buff))
-        return -4;
-
-    return 0;
+    return spi_io_operate(AC483_OP_WRITE, addr, buf, ARRAY_SIZE(buf));
 }
 
 int spi_read_2bytes(uint16_t addr, uint16_t *data)
 {
     int retv;
+    uint8_t buf[2] = { 0, };
 
-    if (SPI_AC483_FD < 0)
-        return -1;
+    if (NULL == data) {
+        retv = -2;
+        goto END;
+    }
 
-    if (NULL == data)
-        return -2;
+    retv = spi_io_operate(AC483_OP_READ, addr, buf, ARRAY_SIZE(buf));
+    if (retv < 0)
+        goto END;
 
-    if (addr < AC483_AVAIL_MEM_STA || addr > AC483_AVAIL_MEM_END)
-        return -3;
-
-    // 先传地址
-    ac483_ctrl_msg_t ctrl_msg = {
-        .ctrl_h = 0x00,
-        .ctrl_l = 0x02, // 0010: write HPIA
-    };
-    uint8_t buff[2] = {
-        (uint8_t)(addr >> 8),
-        (uint8_t)(addr & 0x00FF)
-    };
-
-    struct spi_ioc_transfer tr[2] = {
-        {
-            .tx_buf = (unsigned long)(uint8_t *)&ctrl_msg,
-            .rx_buf = (unsigned long)NULL,
-            .len = AC483_CTRL_MSG_LEN(),
-        },
-        {
-            .tx_buf = (unsigned long)buff,
-            .rx_buf = (unsigned long)NULL,
-            .len = ARRAY_SIZE(buff),
-        }
-    };
-
-    retv = ioctl(SPI_AC483_FD, SPI_IOC_MESSAGE(2), tr);
-    if (retv < AC483_CTRL_MSG_LEN() + ARRAY_SIZE(buff))
-        return -4;
-    
-    // 再读数据
-    ctrl_msg.ctrl_h = 0x00;
-    ctrl_msg.ctrl_l = 0x05; // 0101: read HPID
-    buff[0] = 0;
-    buff[1] = 0;
-    tr[1].tx_buf = (unsigned long)NULL;
-    tr[1].rx_buf = (unsigned long)buff;
-
-    retv = ioctl(SPI_AC483_FD, SPI_IOC_MESSAGE(2), tr);
-    if (retv < AC483_CTRL_MSG_LEN() + ARRAY_SIZE(buff))
-        return -5;
-    
     *data = 0;
-    *data = ((*data | buff[0]) << 8) | buff[1];
+    *data = ((*data | buf[0]) << 8) | buf[1];
 
-    return 0;
+END:
+    return retv;
 }
 
 int spi_write_block(uint16_t addr, const uint8_t *blck, size_t size)
 {
-    int retv;
-
-    if (SPI_AC483_FD < 0)
-        return -1;
-
-    if (NULL == blck)
-        return -2;
-
-    if (addr < AC483_AVAIL_MEM_STA || addr > AC483_AVAIL_MEM_END)
-        return -3;
-
-    // 先传地址
-    ac483_ctrl_msg_t ctrl_msg = {
-        .ctrl_h = 0x00,
-        .ctrl_l = 0x02, // 0010: write HPIA
-    };
-    uint8_t buff[2] = {
-        (uint8_t)(addr >> 8),
-        (uint8_t)(addr & 0x00FF)
-    };
-
-    struct spi_ioc_transfer tr[2] = {
-        {
-            .tx_buf = (unsigned long)(uint8_t *)&ctrl_msg,
-            .rx_buf = (unsigned long)NULL,
-            .len = AC483_CTRL_MSG_LEN(),
-        },
-        {
-            .tx_buf = (unsigned long)buff,
-            .rx_buf = (unsigned long)NULL,
-            .len = ARRAY_SIZE(buff),
-        }
-    };
-
-    retv = ioctl(SPI_AC483_FD, SPI_IOC_MESSAGE(2), tr);
-    if (retv < AC483_CTRL_MSG_LEN() + ARRAY_SIZE(buff))
-        return -4;
-    
-    // 再传数据
-    ctrl_msg.ctrl_h = 0x00;
-    ctrl_msg.ctrl_l = 0x01; // 0001: write HPID
-    tr[1].tx_buf = (unsigned long)blck;
-    if (size/2-1 + addr > AC483_AVAIL_MEM_END)
-        size = 2 * (AC483_AVAIL_MEM_END - addr + 1);
-    else
-        size = 2 * (size / 2);
-    tr[1].len = size;
-
-    retv = ioctl(SPI_AC483_FD, SPI_IOC_MESSAGE(2), tr);
-    if (retv < AC483_CTRL_MSG_LEN() + size)
-        return -5;
-
-    return size;
+    uint8_t *t_blck = (uint8_t *)blck;
+    return spi_io_operate(AC483_OP_WRITE, addr, t_blck, size);
 }
 
 int spi_read_block(uint16_t addr, uint8_t *blck, size_t size)
 {
-    int retv;
-
-    if (SPI_AC483_FD < 0)
-        return -1;
-
-    if (NULL == blck)
-        return -2;
-
-    if (addr < AC483_AVAIL_MEM_STA || addr > AC483_AVAIL_MEM_END)
-        return -3;
-
-    // 先传地址
-    ac483_ctrl_msg_t ctrl_msg = {
-        .ctrl_h = 0x00,
-        .ctrl_l = 0x02, // 0010: write HPIA
-    };
-    uint8_t buff[2] = {
-        (uint8_t)(addr >> 8),
-        (uint8_t)(addr & 0x00FF)
-    };
-
-    struct spi_ioc_transfer tr[2] = {
-        {
-            .tx_buf = (unsigned long)(uint8_t *)&ctrl_msg,
-            .rx_buf = (unsigned long)NULL,
-            .len = AC483_CTRL_MSG_LEN(),
-        },
-        {
-            .tx_buf = (unsigned long)buff,
-            .rx_buf = (unsigned long)NULL,
-            .len = ARRAY_SIZE(buff),
-        }
-    };
-
-    retv = ioctl(SPI_AC483_FD, SPI_IOC_MESSAGE(2), tr);
-    if (retv < AC483_CTRL_MSG_LEN() + ARRAY_SIZE(buff))
-        return -4;
-    
-    // 再读数据
-    ctrl_msg.ctrl_h = 0x00;
-    ctrl_msg.ctrl_l = 0x05; // 0101: read HPID
-    tr[1].tx_buf = (unsigned long)NULL;
-    tr[1].rx_buf = (unsigned long)blck;
-    if (size/2-1 + addr > AC483_AVAIL_MEM_END)
-        size = 2 * (AC483_AVAIL_MEM_END - addr + 1);
-    else
-        size = 2 * (size / 2);
-    tr[1].len = size;
-
-    retv = ioctl(SPI_AC483_FD, SPI_IOC_MESSAGE(2), tr);
-    if (retv < AC483_CTRL_MSG_LEN() + size)
-        return -5;
-
-    return size;
+    return spi_io_operate(AC483_OP_READ, addr, blck, size);
 }
 
 int spi_init(const char *dev, uint8_t mode, uint8_t bits, uint32_t speed)

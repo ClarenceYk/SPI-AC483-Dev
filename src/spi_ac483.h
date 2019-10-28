@@ -36,11 +36,13 @@ int spi_read_control_byte(uint8_t *val);
  * addr: 数据写入的地址
  * data: 写入的数据
  *
- * returns:  0 成功
+ * returns: >0 成功
  *          -1 SPI 设备文件未打开
- *          -2 地址超出范围
- *          -3 传输地址出错
- *          -4 传输数据出错
+ *          -2 未定义
+ *          -3 地址超出范围
+ *          -4 传输地址出错
+ *          -5 传输数据出错
+ *           0 未知错误
  */
 int spi_write_2bytes(uint16_t addr, uint16_t data);
 
@@ -52,12 +54,13 @@ int spi_write_2bytes(uint16_t addr, uint16_t data);
  * addr: 数据读取的地址
  * data: 读出的数据的存放地址
  *
- * returns:  0 成功
+ * returns: >0 成功
  *          -1 SPI 设备文件未打开
  *          -2 data 为空指针
  *          -3 地址超出范围
  *          -4 传输地址出错
  *          -5 读取数据出错
+ *           0 未知错误
  */
 int spi_read_2bytes(uint16_t addr, uint16_t *data);
 
@@ -76,6 +79,7 @@ int spi_read_2bytes(uint16_t addr, uint16_t *data);
  *          -3 地址超出范围
  *          -4 传输地址出错
  *          -5 传输数据出错
+ *           0 未知错误
  */
 int spi_write_block(uint16_t addr, const uint8_t *blck, size_t size);
 
@@ -94,6 +98,7 @@ int spi_write_block(uint16_t addr, const uint8_t *blck, size_t size);
  *          -3 地址超出范围
  *          -4 传输地址出错
  *          -5 读取数据出错
+ *           0 未知错误
  */
 int spi_read_block(uint16_t addr, uint8_t *blck, size_t size);
 
