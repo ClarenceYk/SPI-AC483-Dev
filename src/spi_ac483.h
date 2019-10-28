@@ -88,7 +88,7 @@ int spi_write_block(const uint16_t addr, const uint8_t *blck, size_t size);
  * blck: 数据缓存起始地址
  * size: 数据缓存大小
  *
- * returns:  0 成功
+ * returns: >0 实际读取字节数
  *          -1 SPI 设备文件未打开
  *          -2 blck 为空指针
  *          -3 地址超出范围
