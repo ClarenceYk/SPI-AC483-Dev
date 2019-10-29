@@ -2,22 +2,22 @@
 
 SPI I/O Interfaces for audio chip 483.
 
-## build & install
+## Build & install
 
-Get the source code:
+get the source code:
 
 ```
 git clone https://github.com/ClarenceYk/SPI-AC483-Dev.git
 ```
 
-Autotools:
+autotools:
 
 ```
 cd SPI-AC483-Dev
 autoreconfig --install
 ```
 
-Build:
+build:
 
 ```
 mkdir build-x86 && cd build-x86
@@ -27,15 +27,15 @@ make
 
 *If you want to install this library to a custom directory, add `--prefix=[custom directory]` when running `configure`.*
 
-Install:
+install:
 
 ```
 make install
 ```
 
-## testing
+## Testing
 
-Make & Running unit testing:
+make & running unit testing:
 
 ```
 ../configure --enable-gcov
@@ -43,25 +43,25 @@ make clean && make && make check
 ```
 
 
-## for cross-compiling(armhf)
+## For cross-compiling(armhf)
 
 Make sure you have installed the `check` library in your cross-compiling environment.
 
-Set environment variables:
+set environment variables:
 
 ```
 export CC=[gcc in your cross-compiling env]
 export PKG_CONFIG_PATH=[pkgconfig in your cross-compiling env]
 ```
 
-Autotools:
+autotools:
 
 ```
 cd SPI-AC483-Dev
 autoreconfig --install
 ```
 
-Build:
+build:
 
 ```
 mkdir build-armhf && cd build-armhf
@@ -69,15 +69,15 @@ mkdir build-armhf && cd build-armhf
 make
 ```
 
-Install:
+install:
 
 ```
 make install
 ```
 
-## testing
+## Testing
 
-Make & Running unit testing:
+make & running unit testing:
 
 ```
 ../configure --build x86_64-pc-linux-gun --host arm-linux-gnueabihf --enable-gcov
