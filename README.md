@@ -25,6 +25,8 @@ mkdir build-x86 && cd build-x86
 make
 ```
 
+*If you want to install this library to a custom directory, add `--prefix=[custom directory]` when running `configure`.*
+
 Install:
 
 ```
@@ -40,11 +42,10 @@ Make & Running unit testing:
 make clean && make && make check
 ```
 
-If you want to install this lib to a custom directory, add `--prefix=[custom directory]` when running *configure*.
 
 ## for cross-compiling(armhf)
 
-Make sure you have installed the *check* library in your cross-compiling environment.
+Make sure you have installed the `check` library in your cross-compiling environment.
 
 Set environment variables:
 
