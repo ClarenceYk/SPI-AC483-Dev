@@ -1,8 +1,8 @@
 #include <unistd.h>
-#include <stdint.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
+#include "spi_ac483.h"
 #include "private_io.h"
 
 int SPI_AC483_FD = -1;

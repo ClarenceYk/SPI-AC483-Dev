@@ -1,6 +1,8 @@
 #ifndef SPI_AC483_H
 #define SIP_AC483_H
 
+#include <stdint.h>
+
 /**
  * Function: spi_write_control_byte
  * --------------------------------
