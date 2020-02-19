@@ -112,12 +112,12 @@ END:
 int spi_write_block(uint16_t addr, const uint8_t *blck, size_t size)
 {
     uint8_t *t_blck = (uint8_t *)blck;
-    return spi_io_operate(AC483_OP_WRITE, addr, t_blck, size);
+    return spi_io_operate(AC483_OP_WRITE_BLK, addr, t_blck, size);
 }
 
 int spi_read_block(uint16_t addr, uint8_t *blck, size_t size)
 {
-    return spi_io_operate(AC483_OP_READ, addr, blck, size);
+    return spi_io_operate(AC483_OP_READ_BLK, addr, blck, size);
 }
 
 int spi_init(const char *dev, uint8_t mode, uint8_t bits, uint32_t speed)

@@ -4,10 +4,12 @@
 #define ARRAY_SIZE(a) (sizeof((a)) / sizeof((a)[0]))
 #define AC483_CTRL_MSG_LEN() (sizeof(ac483_ctrl_msg_t))
 
-#define AC483_AVAIL_MEM_STA 0x1000
+#define AC483_AVAIL_MEM_STA 0x0000
 #define AC483_AVAIL_MEM_END 0x17FF
-#define AC483_OP_READ  0x05
-#define AC483_OP_WRITE 0x01
+#define AC483_OP_READ       0x07
+#define AC483_OP_WRITE      0x03
+#define AC483_OP_READ_BLK   0x05
+#define AC483_OP_WRITE_BLK  0x01
 
 typedef struct AC483_Ctrl_Msg {
     uint8_t ctrl_h;
