@@ -201,8 +201,47 @@ int spi_ac483_init(const char *dev)
 int spi_ac483_deinit(void)
 {
     if (SPI_AC483_FD < 0)
-        return 0;
+        return -1;
     
     return close(SPI_AC483_FD);
 }
 
+int spi_ac483_reset(void)
+{
+    if (SPI_AC483_FD < 0)
+        return 0;
+
+    // reset 置 1
+    ac483_ctrl_msg_t ctrl_msg = {
+        .ctrl_h = 0xc0,
+        .ctrl_l = 0x00,
+    }; // 1100_0000_0000_0000
+    uint8_t buff[2] = {0, 0};
+
+    struct spi_ioc_transfer tr[2] = {
+        {
+            .tx_buf = (unsigned long)(uint8_t *)&ctrl_msg,
+            .rx_buf = (unsigned long)NULL,
+            .len = AC483_CTRL_MSG_LEN(),
+        },
+        {
+            .tx_buf = (unsigned long)buff,
+            .rx_buf = (unsigned long)NULL,
+            .len = ARRAY_SIZE(buff),
+        }
+    };
+
+    int retv = ioctl(SPI_AC483_FD, SPI_IOC_MESSAGE(2), tr);
+    if (retv < AC483_CTRL_MSG_LEN() + ARRAY_SIZE(buff))
+        return 0;
+    
+    // reset 置 0
+    ctrl_msg.ctrl_h = 0x80;
+    ctrl_msg.ctrl_l = 0x00; // 1000_0000_0000_0000
+
+    retv = ioctl(SPI_AC483_FD, SPI_IOC_MESSAGE(2), tr);
+    if (retv < AC483_CTRL_MSG_LEN() + ARRAY_SIZE(buff))
+        return 0;
+
+    return 1;
+}

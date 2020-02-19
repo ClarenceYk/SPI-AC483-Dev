@@ -129,4 +129,14 @@ int spi_ac483_init(const char *dev);
  */
 int spi_ac483_deinit(void);
 
+/**
+ * Function: spi_ac483_reset
+ * -------------------------
+ * 向 AC483 发送 reset 命令
+ *
+ * returns:  1 成功
+ *           0 失败
+ */
+int spi_ac483_reset(void);
+
 #endif
