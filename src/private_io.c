@@ -48,7 +48,7 @@ int spi_io_operate(uint8_t rw, uint16_t addr, uint8_t *blck, size_t size)
     ctrl_msg.ctrl_h = 0x00;
     ctrl_msg.ctrl_l = rw; // 0101: read HPID; 0001: write HPID
 
-    if (AC483_OP_READ == rw) {
+    if (AC483_OP_READ == rw || AC483_OP_READ_BLK == rw) {
         tr[1].tx_buf = (unsigned long)NULL;
         tr[1].rx_buf = (unsigned long)blck;
     } else {
